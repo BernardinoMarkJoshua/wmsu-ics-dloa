@@ -51,6 +51,8 @@
             $_SESSION['status'] = 'invalid';
             $msg = "username may be incorrect please try again.";
         }
+
+        //verify hashed password
         else if (password_verify($password, $decoded[0]->password)) {
             $_SESSION['status'] = 'valid';
 
@@ -92,8 +94,6 @@
 <body>
 
     <div class="container">
-        
-
         <div class="container d-flex justify-content-center mt-4">
             <div class="card mb-5">
                 <div class="card-body" style="width: 35rem;">
