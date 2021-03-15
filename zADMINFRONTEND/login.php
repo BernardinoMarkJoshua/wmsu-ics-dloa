@@ -52,7 +52,7 @@
             $msg = "username may be incorrect please try again.";
         }
 
-        //verify hashed password
+        //verify hashed passwords
         else if (password_verify($password, $decoded[0]->password)) {
             $_SESSION['status'] = 'valid';
 
