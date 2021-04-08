@@ -13,40 +13,53 @@
     $apply = new Apply($db);
 
     $apply->student_id = isset($_GET['student_id']) ? $_GET['student_id'] : die();
-    $apply->course = isset($_GET['course']) ? $_GET['course'] : die();
     $apply->year = isset($_GET['year']) ? $_GET['year'] : die();
     $apply->semester = isset($_GET['semester']) ? $_GET['semester'] : die();
 
     $result = $apply->checkStudent();
-
+    $courseResult = $apply->getStudentCourse();
+    $appformResult = $apply->checkAppform();
+    $appformAproved = $apply->checkAppformAproved();
+    
     $rowcount = $result->rowCount(); 
+    $rowcountAppform = $appformResult->rowCount();
+    $rowcountAppformAproved = $appformAproved->rowCount();
 
-    if ($rowcount > 0){
+    if ( $rowcountAppform == 0 && $rowcountAppformAproved == 0) {
 
-        $result2 = $apply->checkYearandSemester();
+        if ($rowcount > 0){
+            $courseResult = $courseResult->fetch(PDO::FETCH_ASSOC);
+            $apply->course = $courseResult['course'];
 
-        $rowcount2 = $result2->rowCount();
-        
-        $subj_arr = array();
-        if ($rowcount2 > 0) {
+            $result2 = $apply->checkYearandSemester();
 
-            while($row = $result2->fetch(PDO::FETCH_ASSOC)) {
+            $rowcount2 = $result2->rowCount();
+            
+            $subj_arr = array();
+            if ($rowcount2 > 0) {
 
-                extract($row);
+                while($row = $result2->fetch(PDO::FETCH_ASSOC)) {
 
-                $subj_item = array(
-                    'subject_code' => $subject_code,
-                    'subject_name' => $subject_name,
-                    'subject_units' => $subject_units
-                );
+                    extract($row);
+
+                    $subj_item = array(
+                        'subject_code' => $subject_code,
+                        'subject_name' => $subject_name,
+                        'subject_units' => $subject_units
+                    );
 
 
-                array_push($subj_arr, $subj_item);
+                    array_push($subj_arr, $subj_item);
+                }
             }
+            echo json_encode($subj_arr);
+        } else {
+            echo json_encode('msg 2');
         }
-        echo json_encode($subj_arr);
+
     } else {
-        echo json_encode('invalid id input');
+        echo json_encode('msg 1');
     }
+    
 
 ?>

@@ -4,6 +4,7 @@
         private $conn;
         private $table = 'student';
         private $studentReigsterTable = 'student_waiting';
+        private $studentAccepted = 'student';
 
         public $student_id;
         public $firstname;
@@ -52,11 +53,28 @@
             catch (PDOException $err){
                 echo    '<div class="alert alert-dismissible alert-danger" >';
                 echo        '<button type="button" class="close" data-dismiss="alert">&times;</button>';
-                echo        '<strong>Oh snap!</strong> student ID may already be in use or something went wrong on the server please enter another student id or try again later.';
+                echo        '<strong>Oops!</strong> Student id is already in use.';
                 echo    '</div>';
                 return false;
             }
         }
+
+        public function checkStudent() {
+            $query = 'SELECT
+                student_id
+            FROM
+            ' . $this->studentAccepted . '
+            WHERE 
+                student_id = ?';
+
+            $stmt = $this->conn->prepare($query);
+
+            $stmt->bindParam(1, $this->student_id);
+
+            $stmt->execute();
+            return $stmt; 
+        }
+
     }
 
 ?>

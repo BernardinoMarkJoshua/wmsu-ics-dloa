@@ -11,7 +11,7 @@
     $counter = 0;
     $ch = curl_init();
 
-    $url = "http://localhost/webacts/Cybersolution_Ver2/API/Fetch/fetchGate.php";
+    $url = "http://icsdloa.online/API/Fetch/fetchGate.php";
 
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -29,7 +29,7 @@
         $student_id = $_POST['stud_id'];
         $ch = curl_init();
     
-        $url = "http://localhost/webacts/Cybersolution_Ver2/API/Faculty/acceptGate.php";
+        $url = "http://icsdloa.online/API/Faculty/acceptGate.php";
         
         $post_data = array (
         "student_id"=> $student_id
@@ -49,14 +49,14 @@
         echo "cURL Error: " . curl_error($ch);
         }
         curl_close($ch);
-        echo '<script>window.location,href="adviserGate.php"</script>';
+        echo '<script>window.location.href="adviserGate.php"</script>';
     } 
     else if (isset($_POST['decline'])) {
-        $student_id = ['stud_id'];
+        $student_id = $_POST['stud_id'];
 
         $ch = curl_init();
     
-        $url = "http://localhost/webacts/Cybersolution_Ver2/API/Faculty/declineGate.php";
+        $url = "http://icsdloa.online/API/Faculty/declineGate.php";
         
         $post_data = array (
         "student_id"=> $student_id
@@ -71,12 +71,12 @@
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         $output = curl_exec($ch);
-    
+        
         if ($output === false) {
         echo "cURL Error: " . curl_error($ch);
         }
         curl_close($ch);
-        echo '<script>window.location,href="adviserGate.php"</script>';
+        echo '<script>window.location.href="adviserGate.php"</script>';
     }
 ?>
 
@@ -96,17 +96,12 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <a href="#" class="navbar-brand">ICS-DLOA Faculty</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#modalid" data-toggle="modal" data-target="#modalid">Logout</a>
-                </li>
-            </ul>
-        </div>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a href="adviser_landing.php" class="nav-link text-light">Home</a>
+            </li>
+        </ul>
     </nav>
     
     <div class="container mt-5 ">
@@ -125,23 +120,24 @@
                         </tr>
                         </thead>
                         <tbody>
-        
-                        <?php foreach ($decoded as $obj): ?>
-                        <tr>
-                            <th scope="row"><?php echo $obj->student_id;?></th>
-                            <td><?php echo $obj->firstname;?></td>
-                            <td><?php echo $obj->middlename;?></td>
-                            <td><?php echo $obj->lastname;?></td>
-                            <td>
-                                <form action="adviserGate.php" method="POST">
-                                <input type="hidden" name="stud_id" value="<?php echo $obj->student_id?>"> 
-                                <input type="submit" name="accept" value="Accept">
-                                <input type="submit" name="decline" value="Decline">
-                                </form>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
 
+                        <?php if($decoded != "no students found") { ?>
+                            <?php foreach ($decoded as $obj): ?>
+                            <tr>
+                                <th scope="row"><?php echo $obj->student_id;?></th>
+                                <td><?php echo $obj->firstname;?></td>
+                                <td><?php echo $obj->middlename;?></td>
+                                <td><?php echo $obj->lastname;?></td>
+                                <td>
+                                    <form action="adviserGate.php" method="POST">
+                                    <input type="hidden" name="stud_id" value="<?php echo $obj->student_id?>"> 
+                                    <input type="submit" name="accept" value="Accept" class="btn btn-success">
+                                    <input type="submit" name="decline" value="Decline" class="btn btn-danger">
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php } ?>
                         </tbody>
                     </table>
                 </div>

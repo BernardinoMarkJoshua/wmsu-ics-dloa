@@ -2,7 +2,7 @@
     $counter = 0;
     $ch = curl_init();
 
-    $url = "http://localhost/webacts/Cybersolution_Ver2/API/Fetch/fetchAchievers.php";
+    $url = "http://icsdloa.online/API/Fetch/fetchAchievers.php";
 
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -23,7 +23,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Achievers</title>
+    <title>ICS-DLOA | Achievers</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -33,21 +33,12 @@
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <a href="#" class="navbar-brand">ICS-DLOA</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a href="dashboard.html" class="nav-link">Dashboard</a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="apply.html" class="nav-link">Apply</a>
-                </li>
-            </ul>
-        </div>
+        
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a href="../index.php" class="nav-link text-light">Home</a>
+            </li>
+        </ul>
     </nav>
 
     <div class="container mt-5">
@@ -85,7 +76,6 @@
               </table>
             </div>
         </div>
-        <a href="dashboard.php">click here to go back</a>
 
     </div>
 

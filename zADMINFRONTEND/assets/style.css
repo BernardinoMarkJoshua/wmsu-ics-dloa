@@ -1,0 +1,90 @@
+hr {
+    height: 2px;
+    color: rgb(208, 208, 208);
+}
+
+.container,.container2,.container3,.table-container, .container-committee {
+    width: 100%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: black;
+    font-size: 11px;
+}
+
+.institute {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.top1 {
+    text-align: center;
+    width: 25%; 
+    float: left;
+}
+
+.top2 {
+    text-align: center;
+    width: 50%; 
+    float: left;
+}
+
+img {
+    width: 80px;
+    height: 80px;
+}
+
+.container2 {
+    margin-top: 2rem;
+}
+
+table, th, td {
+    width: 50%;
+    padding: 0;
+    text-align: center;
+    margin-left: 20.5%;
+    margin-top: 2rem;
+    font-size: 11px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+
+.hr-top {
+    margin-top: 3rem;
+}
+
+.container4 {
+    text-align: center;
+    margin-top: 1rem;
+    width: 50%; 
+    float: left;
+}
+
+.container3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.container5 {
+    width: 50%; 
+    float: left;
+}
+
+.committee-left {
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+.committee-right {
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+.committee-center {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+

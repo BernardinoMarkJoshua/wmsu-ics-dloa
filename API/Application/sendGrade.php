@@ -18,26 +18,31 @@
 
     $apply->student_id = $data->student_id;
     $apply->subject_code = $data->subject_code;
+    $apply->subject_unit = $data->subject_unit;
     $apply->grade = $data->grade;
+    $apply->year = $data->year;
+    $apply->semester = $data->semester;
 
     $result = $apply->checkStudent();
 
     $rowcount = $result->rowCount(); 
 
     if ($rowcount > 0) {
+        
+        
         if ($apply->sendGrades ()) {
-            echo json_encode(
+            json_encode(
                 array(
                     'message' => 'Grade sent!'
                 )
             );
         }
     } else {
-        echo json_encode(
-            array(
-                'message' => 'grade not sent!'
-            )
-        );
+            json_encode(
+                array(
+                    'message' => 'grade not sent!'
+                )
+            );
     }
 
 ?>

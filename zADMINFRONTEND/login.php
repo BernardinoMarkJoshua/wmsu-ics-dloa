@@ -1,22 +1,21 @@
 <?php
-
     session_start();
 
+    $msg = "";
+    if (isset($_SESSION['status']) ) {
+        // sets the default session variables to empty string and session status to invalid
+        if ($_SESSION['status'] == 'invalid' || empty($_SESSION['status'])) {
+            $_SESSION['status'] = 'invalid';
+        } 
 
-    // sets the default session variables to empty string and session status to invalid
-    if ($_SESSION['status'] == 'invalid' || empty($_SESSION['status'])) {
-        $_SESSION['status'] = 'invalid';
-        $msg = "";
-    } 
+        else if ($_SESSION['role'] == 'ADVISER') {
+            echo "<script>window.location.href='adviser_landing.php'</script>";
+        }
 
-    else if ($_SESSION['role'] == 'ADVISER') {
-        echo "<script>window.location.href='adviser_landing.php'</script>";
+        else if ($_SESSION['role'] == 'ADMIN') {
+            echo "<script>window.location.href='admin_landing.php'</script>";
+        }
     }
-
-    else if ($_SESSION['role'] == 'ADMIN') {
-        echo "<script>window.location.href='admin_landing.php'</script>";
-    }
-
 
     // fires the command needed to login user
     if (isset($_POST['login'])) {
@@ -25,7 +24,7 @@
 
         $ch = curl_init();
     
-        $url = "http://localhost/webacts/Cybersolution_Ver2/API/Faculty/login.php";
+        $url = "http://icsdloa.online/API/Faculty/login.php";
         
         $post_data = array (
         "faculty_id"=> $faculty_id
@@ -51,8 +50,6 @@
             $_SESSION['status'] = 'invalid';
             $msg = "username may be incorrect please try again.";
         }
-
-        //verify hashed passwords
         else if (password_verify($password, $decoded[0]->password)) {
             $_SESSION['status'] = 'valid';
 
@@ -94,16 +91,17 @@
 <body>
 
     <div class="container">
+        
         <div class="container d-flex justify-content-center mt-4">
-            <div class="card mb-5">
-                <div class="card-body" style="width: 35rem;">
+            <div class="card mb-5" style="width: 30rem;">
+                <div class="card-body">
                     <h1>Login</h1>
                     <form action="login.php" method="POST">
-                        <label for="faculty_id_inp" class="mt-3">faculty id</label>
+                        <label for="faculty_id_inp" class="mt-3">Faculty id</label>
                         <input type="text" class="form-control" id="faculty_id_inp" name="faculty_id_inp" required>
                         <label for="password_inp" class="mt-3">Password</label>
                         <input type="password" class="form-control" id="password_inp" name="password_inp" required>
-                        <input type="submit" value="login" name="login" id="login" class="btn btn-success mb-2 mt-3">
+                        <input type="submit" value="Login" name="login" id="login" class="btn btn-success mb-2 mt-3">
                     </form>
                     <?php echo $msg;?>
                 </div> 

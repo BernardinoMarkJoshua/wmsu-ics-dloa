@@ -1,4 +1,13 @@
 <?php
+
+    session_start();
+
+    if($_SESSION['status'] == 'invalid' || empty($_SESSION['status'])) {
+        echo "<script>window.location.href='login.php'</script>";
+    } else if ($_SESSION['role'] == 'ADVISER') {
+        echo "<script>window.location.href='adviser_landing.php'</script>";
+    }
+
     $msg = "";
     if(isset($_POST['register'])) {
         $email = $_POST['email_inp'];
@@ -16,7 +25,7 @@
             $hash = password_hash($password, PASSWORD_BCRYPT);
 
             $ch = curl_init();
-            $url = "http://localhost/webacts/Cybersolution_Ver2/API/Registration/facultyRegistration.php";
+            $url = "http://icsdloa.online/API/Registration/facultyRegistration.php";
 
             $post_data = array(
                 "faculty_id" => $faculty_id,
@@ -76,7 +85,7 @@
                     <input type="text" class="form-control" id="faculty_id_inp" name="faculty_id_inp" placeholder="e.g icsuser112233" required>
 
                     <label for="contact_inp" class="mt-3">contact number</label>
-                    <input type="text" class="form-control" id="contact_inp" name="contact_inp" placeholder="e.g example@exp.com" required>
+                    <input type="text" class="form-control" id="contact_inp" name="contact_inp" placeholder="e.g 09455802513" required>
                     
                     <label for="password_inp" class="mt-3">password</label>
                     <input type="password" class="form-control" id="password_inp" name="password_inp" placeholder="password" required>

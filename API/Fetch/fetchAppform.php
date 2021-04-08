@@ -17,6 +17,7 @@
     $faculty->course = $data->course;
     $faculty->year = $data->year;
     $faculty->semester = $data->semester;
+    $faculty->section = $data->section;
 
     if ($faculty->viewAppform()) {
         

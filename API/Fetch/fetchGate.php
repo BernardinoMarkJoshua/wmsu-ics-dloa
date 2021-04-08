@@ -46,7 +46,7 @@ if( $rowcount > 0) {
 } else {
 
     echo json_encode(
-        array('message' => 'no students found')
+        "no students found"
     );
 
 }

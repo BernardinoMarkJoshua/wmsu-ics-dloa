@@ -2,9 +2,9 @@
 
     class Database {
         private $host = 'localhost';
-        private $db_name = 'cybersolution-backend';
+        private $db_name = 'root';
         private $username = 'root';
-        private $password = 'spacenovaqwe123';
+        private $password = ' ';
         private $conn;
 
         public function connect() {

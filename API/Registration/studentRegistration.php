@@ -22,12 +22,22 @@
     $student->contact_number = $data->contact_number;
     $student->course = $data->course;
 
-    if ($student->RegisterStudent()) {
+    $result = $student->checkStudent();
+    $rowcount = $result->rowCount();
 
-        echo   '<div class="alert alert-dismissible alert-success" style="width: 50rem">';
+    if ($rowcount == 0) {
+        if ($student->RegisterStudent()) {
+
+            echo   '<div class="alert alert-dismissible alert-success" style="width: 50rem">';
+            echo        '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+            echo        '<strong>Registration complete!</strong> Wait for an email from ICS-DLOA for registration status update. Thank you.';
+            echo    '</div>';
+
+        }
+    } else {
+        echo    '<div class="alert alert-dismissible alert-danger" >';
         echo        '<button type="button" class="close" data-dismiss="alert">&times;</button>';
-        echo        '<strong>Well done!</strong>successfuly registered! you can now apply for Dean\'s list!.';
+        echo        '<strong>Oops!</strong> Student id is already in use.';
         echo    '</div>';
-
     }
 ?>

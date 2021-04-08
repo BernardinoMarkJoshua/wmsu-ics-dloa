@@ -7,6 +7,8 @@
         private $studentApproved = 'student';
         private $appformApproved = 'appform_approved';
         private $appformWaiting = 'appform';
+        private $adviserInfo = 'adviser_info';
+        private $gradeTable = 'grades';
 
         public $faculty_id;
         public $email;
@@ -161,6 +163,25 @@
             }
         }
 
+        public function declineStudenGrade() {
+            try {
+                $query = 'DELETE FROM '.$this->gradeTable. '
+                WHERE student_id = :student_id';
+
+                $stmt = $this->conn->prepare($query);
+
+                $this->student_id = htmlspecialchars(strip_tags($this->student_id));
+
+                $stmt->bindParam(':student_id', $this->student_id);
+
+                $stmt->execute();
+                return true;
+            } catch (PDOException $err) {
+                echo 'failed';
+                return false;
+            }
+        }
+
         public function viewStudent() {
             $query = 'SELECT
                 student_id,
@@ -172,9 +193,29 @@
                 course
             FROM
             ' .$this->studentApproved .'
-            ORDER BY student_id';
+            ORDER BY lastname';
+
 
             $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt;
+        }
+
+        public function readAdviserInfo() {
+            $query = 'SELECT 
+                adviser_course,
+                adviser_year,
+                adviser_section,
+                adviser_semester 
+            FROM '.$this->adviserInfo. '
+            WHERE faculty_id = :faculty_id';
+            
+            $stmt = $this->conn->prepare($query);
+
+            $this->faculty_id = htmlspecialchars(strip_tags($this->faculty_id));
+
+            $stmt->bindParam(':faculty_id', $this->faculty_id);
+
             $stmt->execute();
             return $stmt;
         }
@@ -196,14 +237,17 @@
                 FROM ' .$this->appformWaiting. '
                 WHERE course = :course 
                 AND year = :year
-                AND semester = :semester';
+                AND semester = :semester
+                AND section = :section';
 
                 $stmt = $this->conn->prepare($query);
 
                 $this->course = htmlspecialchars(strip_tags($this->course));
                 $this->year = htmlspecialchars(strip_tags($this->year));
                 $this->semester = htmlspecialchars(strip_tags($this->semester));
+                $this->section = htmlspecialchars(strip_tags($this->section));
 
+                $stmt->bindParam(':section', $this->section);
                 $stmt->bindParam(':course', $this->course);
                 $stmt->bindParam(':year', $this->year);
                 $stmt->bindParam(':semester', $this->semester);
@@ -224,6 +268,7 @@
                     firstname,
                     middlename,
                     lastname,
+                    section,
                     course,
                     year,
                     semester,
@@ -252,7 +297,7 @@
 
         public function declineAppformWaiting() {
             try {
-                $query = 'DELETE FROM '.$this->appfromWaiting. '
+                $query = 'DELETE FROM '.$this->appformWaiting. '
                 WHERE student_id = :student_id';
 
                 $stmt = $this->conn->prepare($query);
@@ -262,7 +307,7 @@
                 $stmt->bindParam(':student_id', $this->student_id);
 
                 $stmt->execute();
-                return true;
+                return $stmt;
             }
 
             catch (PDOException $err) {
@@ -296,6 +341,31 @@
                 $stmt->execute();
                 return $stmt;
             } 
+            catch (PDOException $err) {
+                echo 'failed';
+                return false;
+            }
+        }
+
+        public function viewStudentGrades() {
+            try {
+                $query = 'SELECT
+                    subject_code,
+                    subject_name,
+                    subject_unit,
+                    grade
+                FROM ' .$this->gradeTable. '
+                WHERE student_id = :student_id';
+
+                $stmt = $this->conn->prepare($query);
+
+                $this->student_id = htmlspecialchars(strip_tags($this->student_id));
+
+                $stmt->bindParam(':student_id', $this->student_id);
+
+                $stmt->execute();
+                return $stmt;
+            }
             catch (PDOException $err) {
                 echo 'failed';
                 return false;

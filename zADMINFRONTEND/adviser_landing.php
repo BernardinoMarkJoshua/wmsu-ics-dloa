@@ -8,10 +8,8 @@
     }
 
     if(isset($_POST['logout-btn'])) {
-        unset($_SESSION['role']);
-        unset($_SESSION['username']);
-        unset($_SESSION['faculty_id']);
-        $_SESSION['status'] = 'invalid';
+
+        session_destroy();
 
         echo '<script>window.location.href="login.php"</script>';
     }
@@ -33,21 +31,18 @@
     
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <a href="#" class="navbar-brand">ICS-DLOA Faculty</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#modalid" data-toggle="modal" data-target="#modalid">Logout</a>
-                </li>
-            </ul>
-        </div>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link text-light" href="#modalid" data-toggle="modal" data-target="#modalid">Logout</a>
+            </li>
+        </ul>
     </nav>
 
-    <span><?php echo '<strong>Hello </strong>'.$_SESSION['username'];?></span>
-    <span><?php echo $_SESSION['role'];?></span>
+    <div class="container mt-3">
+        <span><?php echo '<strong>Hello </strong>'.$_SESSION['username'];?></span>
+        <span><?php echo $_SESSION['role'];?></span>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="modalid" tabindex="-1" role="dialog" aria-labelledby="modal-title-id" aria-hidden="true">

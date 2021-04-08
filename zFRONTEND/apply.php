@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply</title>
+    <title>ICS-DLOA | Apply</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -14,23 +14,22 @@
 
 <!-- request to generate appform -->
 <?php
-    session_start();
     $decoded = 'TOGGLE';
+    $msg = 1;
+    session_start();
     if(!empty($_POST['generate'])) {
         $student_id = $_POST['student_id'];
-        $course_select = $_POST['course_select'];
         $section_select = $_POST['section_select'];
         $year_select = $_POST['year_select'];
         $semester_select = $_POST['semester_select'];
 
-        $_SESSION['course'] = $course_select;
         $_SESSION['section'] = $section_select;
         $_SESSION['year'] = $year_select;
         $_SESSION['semester'] = $semester_select;
 
         $ch = curl_init();
 
-        $url = "http://localhost/webacts/Cybersolution_Ver2/API/Application/generateAppform.php"."?student_id=".$student_id."&course=".$course_select."&year=".$year_select."&semester=".$semester_select;
+        $url = "http://icsdloa.online/API/Application/generateAppform.php"."?student_id=".$student_id ."&year=".$year_select."&semester=".$semester_select;
         
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -44,6 +43,7 @@
         } else {
             
             $decoded = json_decode($resp);    
+            $msg = $decoded;
         }
 
     }
@@ -58,20 +58,26 @@
         for ($x = 1; $x <= $_POST['counter'] ; $x++) {
         $student_id = $_POST['student_id'.$x];
         $subject_code = $_POST['student_code'.$x];
+        $subject_unit = $_POST['subject_unit'.$x];
         $grade = $_POST['grade'.$x];
         $student_section = $_POST['section'];
         $product = $_POST['subject_unit'.$x] * $grade;
         $sumofunits = $sumofunits + $_POST['subject_unit'.$x];  
         $sum = $sum + $product; 
+        $year = $_SESSION['year'];
+        $semester = $_SESSION['semester'];
         
             $ch = curl_init();
 
-            $url = "http://localhost/webacts/Cybersolution_Ver2/API/Application/sendGrade.php";
+            $url = "http://icsdloa.online/API/Application/sendGrade.php";
             
             $post_data = array (
             "student_id"=> $student_id,
-            "subject_code"=> $subject_code,
-            "grade"=> $grade
+            "subject_code"=> $subject_code, 
+            "grade"=> $grade,
+            "year"=> $year,
+            "semester"=> $semester,
+            "subject_unit"=> $subject_unit
             );
         
             $header = [
@@ -92,18 +98,14 @@
 
         // request to send application form
         $gpa = $sum/$sumofunits;
-        $course = $_SESSION['course'];
-        $year = $_SESSION['year'];
-        $semester = $_SESSION['semester'];
 
         $ch1 = curl_init();
 
-        $url1 = "http://localhost/webacts/Cybersolution_Ver2/API/Application/sendAppform.php";
+        $url1 = "http://icsdloa.online/API/Application/sendAppform.php";
         
         $post_data1 = array (
             "student_id"=> $student_id,
             "section"=> $student_section,
-            "course"=> $course,
             "year"=> $year,
             "semester"=> $semester,
             "gpa"=> $gpa
@@ -122,6 +124,9 @@
             if ($output === false) {
                 echo "cURL Error: " . curl_error($ch1);
             } 
+            else if ($output === true) {
+                $msg = 'Successfully apllied to ICS-DLOA';
+            }
             curl_close($ch1);
             session_destroy();
         }
@@ -129,24 +134,35 @@
 ?>
 
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <a href="#" class="navbar-brand">ICS-DLOA</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2">
+        <a href="../index.php" class="navbar-brand">ICS-DLOA</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="dashboard.html" class="nav-link">Dashboard</a>
-                </li>
-
-                <li class="nav-item active">
-                    <a href="apply.html" class="nav-link">Apply</a>
+                    <a href="../index.php" class="nav-link text-light">Home</a>
                 </li>
             </ul>
-        </div>
     </nav>
+
+    <div class="container" <?php if ($msg == 'msg 1') {echo 'style= "display:block; width: 40rem;"';} else {echo 'style= "display: none;"';}?>>
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Slow down!</strong> you have already applied please wait for approval.
+        </div>
+    </div>
+
+    <div class="container" <?php if ($msg == 'msg 2') {echo 'style= "display:block; width: 40rem;"';} else {echo 'style= "display: none;"';}?>>
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Oops!</strong> This id is not yet registered.
+        </div>
+    </div>
+
+    <div class="container" <?php if ($msg == 'Successfully apllied to ICS-DLOA') {echo 'style= "display:block; width: 40rem;"';} else {echo 'style= "display: none;"';}?>>
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong><?php echo $msg;?></strong>
+        </div>
+    </div>
 
     <div class="container d-flex justify-content-center mt-4">
         <div class="card mb-5">
@@ -176,13 +192,13 @@
                                         <input type="hidden" name="subject_unit<?php echo $counter?>" id="subject_unit<?php echo $counter?>" value="<?php echo $obj->subject_units?>">
                                         <input type="hidden" name="student_id<?php echo $counter?>" id="student_id<?php echo $counter?>" value="<?php echo $student_id?>">
                                         <input type="hidden" name="student_code<?php echo $counter?>" id="student_code<?php echo $counter?>" value="<?php echo $obj->subject_code?>">
-                                        <td><input type="text" id="grade<?php echo $counter?>" name="grade<?php echo $counter?>"class="form-control"></td>
+                                        <td><input type="text" id="grade<?php echo $counter?>" name="grade<?php echo $counter?>"class="form-control" required></td>
                                     </tr>
                                 <?php endforeach; ?>
 
                             </tbody>
                         </table>
-                        <input type="submit" value="apply" id="apply" name="apply" class="btn btn-success mb-2 mt-3">
+                        <input type="submit" value="Apply" id="apply" name="apply" class="btn btn-success mb-2 mt-3">
                         </form>
 
                     </div>
@@ -201,12 +217,13 @@
               <div class="container">
                   <form action="apply.php" method="POST">
 
-                    <label for="student_id" class="mt-3">student id</label>
-                    <input type="text" class="form-control" id="student_id" name="student_id" placeholder="e.g 2016000406">
+                    <label for="student_id" class="mt-3">Student id</label>
+                    <input type="number" class="form-control" id="student_id" name="student_id" placeholder="e.g 2016000406" required>
 
 
                     <label for="year" class="mt-3">Year</label>
-                    <select class="form-control" id="year_select" name="year_select">
+                    <select class="form-control" id="year_select" name="year_select" required>
+                        <option disabled selected value>select year</option>
                         <option value="1">1st</option>
                         <option value="2">2nd</option>
                         <option value="3">3rd</option>
@@ -214,27 +231,19 @@
                     </select>
 
 
-                    <label for="semester" class="mt-3">Semester</label>
-                    <select class="form-control" id="semester_select" name="semester_select">
-                        <option value="1">1st</option>
-                        <option value="2">2nd</option>
-                    </select>
+
+                    <input type="hidden" id="semester_select" name="semester_select" value="1">
+                     
 
 
                     <label for="section" class="mt-3">Section</label>
-                    <select class="form-control" id="section_select" name="section_select">
+                    <select class="form-control" id="section_select" name="section_select" required>
+                        <option disabled selected value>select section</option> 
                         <option>A</option>
                         <option>B</option>
                     </select>
-
-
-                    <label for="course_select" class="mt-3">Course</label>
-                    <select class="form-control" id="course_select" name="course_select">
-                        <option>BSCS</option>
-                        <option>BSIT</option>
-                    </select>
                     
-                    <input type="submit" value="generate" name="generate" id="generate" class="btn btn-success mb-2 mt-3">
+                    <input type="submit" value="Generate" name="generate" id="generate" class="btn btn-success mb-2 mt-3" >
                   </form>
                   <div class="d-flex align-items-center justify-content-center">
                     <p class="mt-3"><small>WMSU ICS student and don't have an account?</small></p>

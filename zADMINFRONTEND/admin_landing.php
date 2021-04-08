@@ -16,6 +16,10 @@
 
         echo '<script>window.location.href="login.php"</script>';
     }
+
+    if(isset($_POST['register-btn'])) {
+        echo '<script>window.location.href="registerUsers.php"</script>';
+    }
 ?>
 
 <!DOCTYPE html>
@@ -70,7 +74,10 @@
     </div>
     </div>
 
-    
+    <h1>Admin page</h1>
 
+    <form action="admin_landing.php" method="POST">
+        <input type="submit" value="Register" name="register-btn" class="btn btn-success">
+    </form>
 </body>
 </html>

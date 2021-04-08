@@ -16,7 +16,20 @@
 
     $faculty->student_id = $data->student_id;
 
-    if ($faculty->declineAppformWaiting()) {
-        echo 'you have declined the student';
+    if ($faculty->declineStudenGrade()) {
+        if ($faculty->declineAppformWaiting()) {
+
+            $result = $faculty->declineAppformWaiting();
+            $rowcount = $result->rowCount();
+
+            if ($rowcount > 0) {
+                echo 'you have declined the student';
+            }
+            else {
+                echo 'student does not exist.';
+            }
+        }
+    } else {
+        echo 'student does not exist.';
     }
 ?>
